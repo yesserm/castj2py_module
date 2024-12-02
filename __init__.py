@@ -9,7 +9,7 @@ print(f"Current path: {os.path.join(current_path, 'modules', 'castj2py')}")
 sys.path.append(os.path.join(current_path, 'modules', 'castj2py'))
 
 from src.main import run
-                
+
 try:
     module = GetParams("module")
 
@@ -20,7 +20,3 @@ try:
 except Exception as e:
     print(f"Error: {e}")
     raise e
-
-
-
-
