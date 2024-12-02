@@ -1,0 +1,88 @@
+{
+    "author":"Yesser Miranda",
+    "description": "Cast bot json to bot python compatible with selenium",
+    "disclaimer":"THERE IS NO WARRANTY FOR THE PROGRAM, TO THE EXTENT PERMITTED BY APPLICABLE LAW. EXCEPT WHEN OTHERWISE STATED IN WRITING THE COPYRIGHT HOLDERS AND/OR OTHER PARTIES PROVIDE THE PROGRAM “AS IS” WITHOUT WARRANTY OF ANY KIND, EITHER EXPRESSED OR IMPLIED, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE. THE ENTIRE RISK AS TO THE QUALITY AND PERFORMANCE OF THE PROGRAM IS WITH YOU. SHOULD THE PROGRAM PROVE DEFECTIVE, YOU ASSUME THE COST OF ALL NECESSARY SERVICING, REPAIR OR CORRECTION.",
+    "version":"0.1",
+    "license": "MIT",
+    "homepage":"http://rocketbot.co/",
+    "linux": true,
+    "windows":true,
+    "mac":true,
+    "docker":true,
+    "name": "castj2py",
+    "dependencies": {
+
+    },
+    "title": {
+        "en": "Cast Json to Py",
+        "es": "Convertir JSON a Python"
+    },
+    "icon": "data:image/png;base64,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",
+    "children": [
+        {
+            "en": {
+                "title": "Convert JSON 2 Python",
+                "description": "This module convert JSON bot to Python bot compatible with selenium",
+                "title_options": "",
+                "options":null
+            },
+            "es": {
+                "title": "Convertir JSON a Python",
+                "description": "Este modulo convierte bot JSON a bot Python compatible con selenium",
+                "title_options": "",
+                "options": null
+            },
+            "form": {
+                "css": "modal-lg",
+                "inputs": [
+                     {
+                        "type": "input",
+                        "placeholder":"",
+                        "title": {
+                            "es": "",
+                            "en": ""
+                        },
+                        "id": "",
+                        "css": "col-md-12"
+                    },
+                    {
+                        "type": "input",
+                        "placeholder":"",
+                        "title": {
+                            "es": "",
+                            "en": ""
+                        },
+                        "id": "",
+                        "css": "col-md-12"
+                    },
+                    {
+                        "type": "input",
+                        "placeholder":"",
+                        "title": {
+                            "es": "",
+                            "en": ""
+                        },
+                         "help": {
+                            "es": "",
+                            "en": ""
+                        },
+                        "id": "",
+                        "css": "col-md-12"
+                    }
+                ]
+            },
+            "video_youtube": "",
+            "icon": "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAIAAAACACAYAAADDPmHLAAAAAXNSR0IArs4c6QAACSdJREFUeF7tnW2oHNUZx/9nzt67OxsbP2iKSd8SDSjJ3Ylpgo20pBr6IlUbBZP6pbTYL4LQFxRKFRVLKfZDlfZDSym2pdS2SQrFN1SktYhEqQ3xzl6TUINaJUYNilrvzt6bPfPo5ObevO3NPGdm9mZ2zrNf9/+cec7/+c05s2fOzijIx2kHlNO9l85DAHAcAgFAAHDcAce7LyOAAOC4A453X0YAAcBxBxzvvowAAoDjDjjefRkBBADHHXC8+zICCACOO+B492UEEAAG48Do2FTQ0/FmFeMLUFgJ4PzBHKmyrb4E4EUiPF2D98B0u94eRE+LHwHWTi7TPe9eKGwdRMIOt/ln0zM3Y89ZbxTpQbEArO6u1Jr+CeBTRSYpbc058JoxahNeaOwvypPiAAiiFRp4DsA5RSUn7fR14G3jYT2e918pwp9iAFhJda/ZfU4BrSKSkjZO7wCBwrjjX4L9aiqvV4UAUAuinxLwo7zJSDzfAUX4ca/t38mP6K/MD0By0We8A3kTkXhrByITmxWYOOtN68jjAnID4LU6P1BK3ZMnCYnN5gBBfS8OG7/MFj0TlRsAHUSPAfhqniQkNrMDj5vQvyJzdEEA/A/Ap/MkIbGZHXjFhP6KzNEFAUDMBA4B2MPUui5bBWAJw4TIhH6ToZtXUsQUwANAqR1mvCGrg4xq6aC7A6DrGFKY0M9Vw1zBSYI6iAQATqUsNAKAhVlVlAoAVayqRZ8EAAuzqigVAKpYVYs+CQAWZlVRKgBUsaoWfRIALMyqolQAqGJVLfpUTQAI203b/wbHBy+I7lTA5RztsGgIeDIO/bs4+epWtI27p7KSK4E2ZwDH0FJoLJbCbfovAJSiuowkBAD+zSCbM4BhfTkkAoAAwL0banMCyBRQjvM7PQsZAWQEkBGAuSHEZghMP/VKopARQEYAGQFkBGBtibMZAeUisCQjfGoaVZ0CUjsuAmsHhmoEsO6dBKQ6IACkWlRtgQBQ7fqm9k4ASLWo2gIBoNr1Te2dAJBqUbUFAkC165vaOwEg1aJqCwSAatc3tXfuAXDR++eMjtaXTuvpN7H7Y8lzBPJ91k6tqlH88XyNFBvdU95b2F1nPR9hqDaFWtm0jpp6euoypbCJFF0KwicAfOZYG7TFhM2/WbXZR2xjYN5jseMtdkXb5H/GbwZxDPCCzvcV1LUANp5eXxAAa7rbQbSFk9uCaWxuBlnkX2oA9JrOVpD6GYDlLKOJtpp2cwdLexqRzRya91jseBsAhukJIf0MGBmbXB973q8BrGcblAgFgCN22QBcuhGg1oruIoXbMz2ASgAYYgACWqQR/RVQV1md9ceLBYAhBWCse0HNo0cIuDBz8WUKmLNuuKaAVR+cp2s6eZvFubmKLwAMIQCXku9NRs8qqCB38QWAYQOAlA6iB3PN+SdTI9cAw3MNUAuinxBwW84z/2lFeDJW6qBC/JbR5ilZCgZKvxI40ppcFyvvPxmL/x4p9cP4cP1+7FEfZGyj0mGlB0AH0T8AbLKugsIfzNThW7Bv8dvWsQ4FlBqAWqv7JVL0hGU9JgH6dhE3eiyPO5TyUv8M9ILuLgX6rIWzB4ynLsfzjRctYpyW6rLeDBoJOhtiqGcsqhPp2NswPVEPLWKcl5Z2BLB8O1gMpTab8cbDzlfU0oDSAuAF0YQCVrP6Q/idafvfYWlFdIID5QTg4mi5jvEys1bGxLQCE83XmHqRHedAKQE4uqvnXl6l6CETNr/O04rqZAdKCYAOoj8C+CarXIQbTNv/PUsrolMcKCsA3PcDkjHT5+KFs985U7W1MZCdo8WWLnab8wht8l+wHUEWv/9fNqF/fl4T8sTbGMg+jusA6CBKLug+yTDs3yb0P8fQDUwiAPCtZb82TgfRNICR1KYJj5i2n31bWOoB0gUCQLpHswobACIAjfSm6WETNq9O1w1OIQDwveUD0Ipeh8LS1KYVdppx//OpuqMCHUT/4mgH9bx9zrGPaCz+2cNuc76LwDK+L6AWRHsJuCitcwr4by/02ZtDB/HmURkB0qp07Hv+CBBEyU2gDYymjRlpLMYu1WFoB/LqWQGA4/yMxgYAi4Ug/l+8ZAQ4tVg2AC/cOsCa7o2KKPm7F+fzqAn9r3GEAsCQADA6NhUYLx7nFDXRGO2t5vwfng2AxUXYIF46ZXMRyvVoPl1Jt4Ql28C7rzIXg5LJ5Qkz7n8lzQw2AAu4EpeW86C/L+UUkHQ6w1bwb320LJxcO8z7EQCGZAo4kuZY9wLt0X7+GUDvatIbp9v15K9jfT9sACymAH5+5VSWdAqYMUsHneTfQDYrfYdM7H0RE/W9/exmAyBTQF9aF+xXwNzRg+6FGpQ87Mjjnz/0rlLe9b3xxuMnxwgAwzQFHM1Vt6L7oHADH4AZpSLc3Rtt3I1d6r3ZWAGgDwBl3RY+l+rayWW65+2FwmJbCABECvRbxNjWm2juZAMg1wAlmQLmRoHJa6C8v2cA4FgI4SDrBlMSIQCUC4Akm1rQ+QVBfTcXBNxguQgsHwC4jGr6ne4DAFjLvtxa99UJACUEYHY6CKJHAVyRq8BpwRZTwCCWgtPSK/j7VQCWcNpc+J+B/bJaTg29uJv8xEt5EiinS/NoLEYAm6XUHBmVIfRVE/rHPWrXPiX27eDUpldSXS+Kfg5SN6VqswgEgD6u0YMmbG7OYudsTHEAzE4HF3evREz3Azg7T2KnxAoAp1hCUDfFYeNXeXwuHIAjyaybXKoPe/cAuD5PcifEWlwD2KylF5bfGWjIjMTLsGvRwTyH5gOw9v9LalTj/TN4NqMYXybg1jwJzsUKACfaSPiNafs35vWWDYBudbZAqe15D5g5XgA4Zh3hoKnF67F70euZ/TwaKADkdXDh4w8Z8jaiXd9XxKH5AMw8+39bEQfN1IZcBCa7rHYa0FaMNw9k8rBPkABQlJODbecNEO4w7cZ9gIqLPBQfALkGKNJ3TlsvffQrah9AfzJh8y+cgCwaPgBDNAVkMcLVGAHA1cpb/wqQEaCSqMgIUMmy8jslAPC9qqSSDQCyLAUXaJnNq1cLPGzlm+IDUHkr3OygAOBm3ed6LQAIAI474Hj3ZQQQABx3wPHuywggADjugOPdlxFAAHDcAce7/yE54DbMadBSxgAAAABJRU5ErkJggg==",
+            "module": "convertJson2Py",
+            "module_name": "castj2py",
+            "visible": true,
+            "options": false,
+            "father": "module",
+            "group": "scripts",
+            "linux": true,
+            "windows":true,
+            "mac":true,
+            "docker":true
+        }
+    ]
+}
