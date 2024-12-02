@@ -1,38 +1,26 @@
-# coding: utf-8
-"""
-Base para desarrollo de modulos externos.
-Para obtener el modulo/Funcion que se esta llamando:
-     GetParams("module")
+from json import load
+from pathlib import Path
+import os
+import sys
 
-Para obtener las variables enviadas desde formulario/comando Rocketbot:
-    var = GetParams(variable)
-    Las "variable" se define en forms del archivo package.json
+current_path = Path(os.getcwd()).resolve()
+print(f"Current path: {current_path}")
+print(f"Current path: {os.path.join(current_path, 'modules', 'castj2py')}")
+sys.path.append(os.path.join(current_path, 'modules', 'castj2py'))
 
-Para modificar la variable de Rocketbot:
-    SetVar(Variable_Rocketbot, "dato")
+from src.main import run
+                
+try:
+    module = GetParams("module")
 
-Para obtener una variable de Rocketbot:
-    var = GetVar(Variable_Rocketbot)
+    if module == "convertJson2Py":
+        run()
+        print('Bot creado')
 
-Para obtener la Opcion seleccionada:
-    opcion = GetParams("option")
+except Exception as e:
+    print(f"Error: {e}")
+    raise e
 
-
-Para instalar librerias se debe ingresar por terminal a la carpeta "libs"
-    
-    pip install <package> -t .
-
-"""
-
-"""
-    Obtengo el modulo que fue invocado
-"""
-module = GetParams("module")
-
-
-if module == "convertJson2Py":
-
-    print('Bot creado')
 
 
 
