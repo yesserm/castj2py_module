@@ -14,9 +14,8 @@ try:
     module = GetParams("module")
 
     if module == "convertJson2Py":
-        run()
-        print('Bot creado')
-
+        bot_name = GetParams("inputBotName")
+        run(bot_name)
 except Exception as e:
     print(f"Error: {e}")
     raise e

@@ -37,36 +37,12 @@
                 "inputs": [
                      {
                         "type": "input",
-                        "placeholder":"",
+                        "placeholder":"Bot Name",
                         "title": {
-                            "es": "",
-                            "en": ""
+                            "es": "Insert bot name",
+                            "en": "Ingrese el nombre del bot"
                         },
-                        "id": "",
-                        "css": "col-md-12"
-                    },
-                    {
-                        "type": "input",
-                        "placeholder":"",
-                        "title": {
-                            "es": "",
-                            "en": ""
-                        },
-                        "id": "",
-                        "css": "col-md-12"
-                    },
-                    {
-                        "type": "input",
-                        "placeholder":"",
-                        "title": {
-                            "es": "",
-                            "en": ""
-                        },
-                         "help": {
-                            "es": "",
-                            "en": ""
-                        },
-                        "id": "",
+                        "id": "inputBotName",
                         "css": "col-md-12"
                     }
                 ]
