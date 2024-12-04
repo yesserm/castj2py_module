@@ -26,3 +26,21 @@ class BotsRB:
 
     def get_bots(self):
         return self._bots
+
+    def get_bots_recent(self):
+        bots_ids = []
+        bots_recent = []
+        for bot in reversed(self._bots):
+            if bot[0] not in bots_ids:
+                if len(bots_recent) == 0:
+                    bots_recent.append(bot)
+                    bots_ids.append(bot[0])
+                else:
+                    if bot[1] != bots_recent[-1][1]:
+                        bots_recent.append(bot)
+                        bots_ids.append(bot[0])
+        return bots_recent
+
+    def get_bot_names(self):
+        bots_recent = self.get_bots_recent()
+        return [bot[1] for bot in bots_recent]
