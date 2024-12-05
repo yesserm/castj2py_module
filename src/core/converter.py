@@ -3,19 +3,31 @@ import logging
 import base64
 import os
 
+from .json_loader import get_all_commands
+from .translator import translate_j_to_py
+
 logger = logging.getLogger('app_logger')
 
 json_dict = {}
 
 
-def convert_json_decoded_to_python(json_decoded, output_file_path):
-    logger.debug(f"Converting {json_decoded} to Python code and saving to {output_file_path}")
+def convert_json_decoded_to_python(json_decoded, output_file_path, conversion_dict):
+    logger.debug(f"Converting json to Python code and saving to {output_file_path}")
     if os.path.exists(output_file_path):
         try:
-            python_code = json.dumps(json_decoded, indent=4)
-            with open(output_file_path, 'w') as file:
-                file.write(python_code)
-            logger.info(f"Conversion complete. Saved to {output_file_path}")
+            all_comands_json = get_all_commands(json_decoded)
+            for command in all_comands_json:
+                if command is not None:
+                    try:
+                        python_code = translate_j_to_py(command, conversion_dict)
+                        logger.debug(f"Python code: {python_code}")
+                        python_code = python_code.strip() + '\n'
+                        with open(output_file_path, 'w') as file:
+                            file.write(python_code)
+                        logger.info(f"Conversion complete. Saved to {output_file_path}")
+                    except Exception as e:
+                        logger.error(f"Error converting JS to Python: {e}")
+                        pass
         except Exception as e:
             logger.error(f"Error converting JSON to Python: {e}")
             raise e

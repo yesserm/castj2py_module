@@ -23,6 +23,3 @@ def main():
         logger.info(f"Database already exists at {db_path}")
         logger.info(f"Loading data from {json_path} to database")
         load_json_to_db(db_path, json_path)
-
-
-main()
