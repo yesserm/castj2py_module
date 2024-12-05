@@ -10,9 +10,18 @@ json_dict = {}
 
 def convert_json_decoded_to_python(json_decoded, output_file_path):
     logger.debug(f"Converting {json_decoded} to Python code and saving to {output_file_path}")
-    if not os.path.exists(output_file_path):
-        with open(output_file_path, 'w') as file:
-            file.write(json_decoded)
+    if os.path.exists(output_file_path):
+        try:
+            python_code = json.dumps(json_decoded, indent=4)
+            with open(output_file_path, 'w') as file:
+                file.write(python_code)
+            logger.info(f"Conversion complete. Saved to {output_file_path}")
+        except Exception as e:
+            logger.error(f"Error converting JSON to Python: {e}")
+            raise e
+    else:
+        logger.error(f"Error: {output_file_path} does not exist")
+        raise FileNotFoundError(f"Error: {output_file_path} does not exist")
 
 
 def load_json_from_base64(encoded_str):

@@ -35,4 +35,5 @@ except Exception as e:
     logger.error(f"Error: there is a error running bot")
     raise e
 
+# Initialize the database
 main()
