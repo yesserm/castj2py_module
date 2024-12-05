@@ -23,3 +23,13 @@ def get_js_code():
                 js_code_list.append(command['command'])
         return js_code_list
     return js_code_list
+
+
+def get_all_commands():
+    global json_file_object
+    commands_list = []
+    if json_file_object and json_file_object['project']['commands']:
+        for command in json_file_object['project']['commands']:
+            commands_list.append(command)
+        return commands_list
+    return commands_list

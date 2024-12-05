@@ -1,8 +1,29 @@
 import json
 import logging
+import base64
+import os
 
 logger = logging.getLogger('app_logger')
 
+json_dict = {}
 
-def convert_json_to_python(json_file_path, output_file_path):
-    logger.debug(f"Converting {json_file_path} to Python code and saving to {output_file_path}")
+
+def convert_json_decoded_to_python(json_decoded, output_file_path):
+    logger.debug(f"Converting {json_decoded} to Python code and saving to {output_file_path}")
+    if not os.path.exists(output_file_path):
+        with open(output_file_path, 'w') as file:
+            file.write(json_decoded)
+
+
+def load_json_from_base64(encoded_str):
+    decoded_str = base64.b64decode(encoded_str).decode('utf-8')
+    json_data = json.loads(decoded_str)
+    return json_data
+
+
+def load_json_dict(path_json):
+    global json_dict
+    with open(path_json, 'r') as file:
+        json_d = json.load(file)
+        json_dict = json_d
+    return json_d
