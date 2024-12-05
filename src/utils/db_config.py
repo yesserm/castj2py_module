@@ -26,7 +26,9 @@ def create_db(db_path) -> None:
 
 
 def get_project_root():
-    return os.path.join(Path(os.getcwd()).resolve(), 'modules', 'castj2py', 'samples')
+    samples_path = os.path.join(Path(os.getcwd()).resolve(), 'modules', 'castj2py', 'samples')
+    os.makedirs(samples_path, exist_ok=True)
+    return samples_path
 
 
 def insert_conversion(db_path: str, j_code: str, py_code: str) -> int:
