@@ -3,8 +3,8 @@ import logging
 import base64
 import os
 
-from .json_loader import get_all_commands
-from .translator import translate_j_to_py
+from .json_loader import get_all_commands, get_all_vars
+from .translator import translate_j_to_py, translate_var_to_python
 
 logger = logging.getLogger('app_logger')
 
@@ -12,8 +12,6 @@ json_dict = {}
 
 
 def convert_json_decoded_to_python(json_decoded, output_file_path, conversion_dict):
-    logger.debug(f"Converting json {isinstance(json_decoded, dict)} to Python code and saving to"
-                 f" {output_file_path}")
     if os.path.exists(output_file_path):
         try:
             all_comands_json = get_all_commands(json_decoded)
@@ -23,7 +21,30 @@ def convert_json_decoded_to_python(json_decoded, output_file_path, conversion_di
                         python_code = translate_j_to_py(command, conversion_dict)
                         logger.debug(f"Python code: {python_code}")
                         python_code = python_code + '\n'
-                        with open(output_file_path, 'w') as file:
+                        with open(output_file_path, 'a') as file:
+                            file.write(python_code)
+                        logger.info(f"Conversion complete. Saved to {output_file_path}")
+                    except Exception as e:
+                        logger.error(f"Error converting JS to Python: {e}")
+                        pass
+        except Exception as e:
+            logger.error(f"Error converting JSON to Python: {e}")
+            raise e
+    else:
+        logger.error(f"Error: {output_file_path} does not exist")
+        raise FileNotFoundError(f"Error: {output_file_path} does not exist")
+
+
+def convert_json_var_to_python(json_decoded, output_file_path):
+    if os.path.exists(output_file_path):
+        try:
+            all_vars = get_all_vars(json_decoded)
+            for var in all_vars:
+                if var is not None:
+                    try:
+                        python_code = translate_var_to_python(var)
+                        python_code = python_code + '\n'
+                        with open(output_file_path, 'a') as file:
                             file.write(python_code)
                         logger.info(f"Conversion complete. Saved to {output_file_path}")
                     except Exception as e:

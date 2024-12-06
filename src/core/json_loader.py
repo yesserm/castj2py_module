@@ -39,6 +39,21 @@ def get_all_commands(json_decoded=None):
     if json_file_object and json_file_object['project']['commands']:
         for command in json_file_object['project']['commands']:
             commands_list.append(command)
-        logger.debug(f"Commands list: {commands_list}")
         return commands_list
     return commands_list
+
+
+def get_all_vars(json_decoded=None):
+    global json_file_object
+    vars_list = []
+    if json_decoded and isinstance(json_decoded, dict):
+        json_file_object = json_decoded
+    else:
+        logger.info(f"Error: json_decoded is not a dictionary")
+        pass
+    if json_file_object and json_file_object['project']['vars']:
+        for var in json_file_object['project']['vars']:
+            vars_list.append(var)
+        logger.debug(f"Variables list: {vars_list}")
+        return vars_list
+    return vars_list

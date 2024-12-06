@@ -14,9 +14,18 @@ try:
 
     if module == "convertJson2Py":
         bot_name = GetParams("inputBotName")
-        # Initialize the database
+        bot_name_lower = str(bot_name).replace(" ", "_").lower()
+        # crear el fichero samples/bot_name .py
+        ruta_bot = os.path.join(current_path, 'modules', 'castj2py', 'samples', f'{bot_name_lower}.py')
+        if not os.path.exists(ruta_bot):
+            with open(ruta_bot, 'w') as file:
+                file.write('import json\n')
+        else:
+            with open(ruta_bot, 'w') as file:
+                file.write('import json\n')
+        # Initializar la database
         main()
-        run(bot_name)
+        run(bot_name, ruta_bot)
 except Exception as e:
     print(f"Error: {e}")
     raise e

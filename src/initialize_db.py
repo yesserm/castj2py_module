@@ -17,9 +17,7 @@ def main():
     if not os.path.exists(db_path) or not os.path.exists(json_path):
         create_db(db_path)
         load_json_to_db(db_path, json_path)
-        logger.info(f"Database created at {db_path}")
-        logger.info(f"Database created and loaded with data from {json_path}")
+        logger.debug(f"Database created and loaded with data from {json_path}")
     else:
-        logger.info(f"Database already exists at {db_path}")
-        logger.info(f"Loading data from {json_path} to database")
+        logger.debug(f"Loading data from {json_path} to database")
         load_json_to_db(db_path, json_path)
