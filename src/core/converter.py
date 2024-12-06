@@ -12,7 +12,8 @@ json_dict = {}
 
 
 def convert_json_decoded_to_python(json_decoded, output_file_path, conversion_dict):
-    logger.debug(f"Converting json to Python code and saving to {output_file_path}")
+    logger.debug(f"Converting json {isinstance(json_decoded, dict)} to Python code and saving to"
+                 f" {output_file_path}")
     if os.path.exists(output_file_path):
         try:
             all_comands_json = get_all_commands(json_decoded)
@@ -21,7 +22,7 @@ def convert_json_decoded_to_python(json_decoded, output_file_path, conversion_di
                     try:
                         python_code = translate_j_to_py(command, conversion_dict)
                         logger.debug(f"Python code: {python_code}")
-                        python_code = python_code.strip() + '\n'
+                        python_code = python_code + '\n'
                         with open(output_file_path, 'w') as file:
                             file.write(python_code)
                         logger.info(f"Conversion complete. Saved to {output_file_path}")
@@ -36,7 +37,7 @@ def convert_json_decoded_to_python(json_decoded, output_file_path, conversion_di
         raise FileNotFoundError(f"Error: {output_file_path} does not exist")
 
 
-def load_json_from_base64(encoded_str):
+def load_json_from_base64(encoded_str) -> dict:
     decoded_str = base64.b64decode(encoded_str).decode('utf-8')
     json_data = json.loads(decoded_str)
     return json_data
