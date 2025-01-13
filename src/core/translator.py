@@ -4,33 +4,81 @@ import logging
 logger = logging.getLogger('app_logger')
 
 
-def translate_j_to_py(j_cod, conversion_d):
+def translate_j_to_py(j_cod, conversion_d, level=0):
     py_cod = j_cod
     print(f"\n code : {py_cod}")
     python_code = ''
-    block='    '
+
+    #Manejo de sangria 
+    indent='    '
+    current_indent = indent * level
+    next_indent = indent * (level + 1)
+
     group = py_cod['group']
     comando = json.dumps(py_cod['command'])
     if isinstance(py_cod, dict) and 'father' in py_cod and py_cod['father'] in conversion_d:
-        if group == 'web':
-
-            # execjs    
+        
+        # se evalua cada grupo
+        if group == 'web':   
             if str(py_cod['father']).lower() == 'execjs':
                 var = py_cod['getvar']
                 if var == '':
-                    python_code += f'{conversion_d[py_cod["father"]]}(f{comando})' + '\n'
+                    python_code += f'{current_indent}{conversion_d[py_cod["father"]]}(f{comando})' + '\n'
                 else:
-                    python_code += f'{var} = {conversion_d[py_cod["father"]]}(f{comando})' + '\n'
+                    python_code += f'{current_indent}{var} = {conversion_d[py_cod["father"]]}(f{comando})' + '\n'
 
         elif group == 'logic':       
             if str(py_cod['father']).lower() == 'evaluateif':
                 comand = py_cod['command'].replace("{", "").replace("}", "")     
-                python_code += f'{conversion_d[py_cod["father"]]}'+' '+f'{comand}:' + '\n'
+                python_code += f'{current_indent}{conversion_d[py_cod["father"]]}'+' '+f'{comand}:' + '\n'
+
+                # Procesa los hijos del bloque "if"
                 for child in py_cod['children']:
-                    python_code += f'{block}{translate_j_to_py(child, conversion_d)}'
-                python_code += f'{conversion_d["else"]}:' + '\n'
-                for els in py_cod['else']:
-                    python_code += f'{block}{translate_j_to_py(els, conversion_d)}'
+                    python_code += translate_j_to_py(child, conversion_d, level + 1)
+
+                                    
+                # Procesa el bloque "else"
+                if len(py_cod['else']) > 0:
+                    python_code += f'{current_indent}{conversion_d["else"]}:' + '\n'
+                    for els in py_cod['else']:
+                       python_code += translate_j_to_py(els, conversion_d, level + 1)
+
+            elif str(py_cod['father']).lower() == 'for':
+                var = py_cod['var']
+                comand_as_json = json.loads(py_cod['command'])
+                cmd = comand_as_json['iterable'].replace("{", "").replace("}", "")
+                python_code += f'{current_indent}{conversion_d[py_cod["father"]]}'+' i in range('+f'len({cmd})):' + '\n'
+                python_code += f'{next_indent}{var} = i + 1' + '\n'
+                
+                # Procesa los hijos del bloque "for"
+                for child in py_cod['children']:
+                    python_code += translate_j_to_py(child, conversion_d, level + 1)
+
+            elif str(py_cod['father']).lower() == 'evaluatewhile':
+                comand = py_cod['command'].replace("{", "").replace("}", "")     
+                python_code += f'{current_indent}{conversion_d[py_cod["father"]]}'+' '+f'{comand}:' + '\n'
+
+                # Procesa los hijos del bloque "While"
+                for child in py_cod['children']:
+                    python_code += translate_j_to_py(child, conversion_d, level + 1)
+
+            elif str(py_cod['father']).lower() == 'break':
+                python_code += f'{current_indent}{conversion_d[py_cod["father"]]} '+ '\n' 
+
+            elif str(py_cod['father']).lower() == 'trycatch':   
+                python_code += f'{current_indent}{conversion_d[py_cod["father"]]}:'+ '\n'
+                
+                # Procesa los hijos del bloque "try"
+                for child in py_cod['children']:
+                    python_code += translate_j_to_py(child, conversion_d, level + 1)
+
+                python_code += f'{current_indent}except:'+ '\n'
+
+                  # Procesa los hijos del bloque "execpt"
+                for child in py_cod['else']:
+                    python_code += translate_j_to_py(child, conversion_d, level + 1)              
+                
+
     else:
         logger.error(f"Error: {py_cod} not found in conversion dictionary")
 

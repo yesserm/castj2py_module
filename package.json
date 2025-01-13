@@ -1,17 +1,17 @@
 {
-    "author":"Yesser Miranda",
+    "author": "Yesser Miranda",
     "description": "Cast bot json to bot python compatible with selenium",
-    "disclaimer":"THERE IS NO WARRANTY FOR THE PROGRAM, TO THE EXTENT PERMITTED BY APPLICABLE LAW. EXCEPT WHEN OTHERWISE STATED IN WRITING THE COPYRIGHT HOLDERS AND/OR OTHER PARTIES PROVIDE THE PROGRAM “AS IS” WITHOUT WARRANTY OF ANY KIND, EITHER EXPRESSED OR IMPLIED, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE. THE ENTIRE RISK AS TO THE QUALITY AND PERFORMANCE OF THE PROGRAM IS WITH YOU. SHOULD THE PROGRAM PROVE DEFECTIVE, YOU ASSUME THE COST OF ALL NECESSARY SERVICING, REPAIR OR CORRECTION.",
-    "version":"0.1",
+    "disclaimer": "THERE IS NO WARRANTY FOR THE PROGRAM, TO THE EXTENT PERMITTED BY APPLICABLE LAW. EXCEPT WHEN OTHERWISE STATED IN WRITING THE COPYRIGHT HOLDERS AND/OR OTHER PARTIES PROVIDE THE PROGRAM “AS IS” WITHOUT WARRANTY OF ANY KIND, EITHER EXPRESSED OR IMPLIED, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE. THE ENTIRE RISK AS TO THE QUALITY AND PERFORMANCE OF THE PROGRAM IS WITH YOU. SHOULD THE PROGRAM PROVE DEFECTIVE, YOU ASSUME THE COST OF ALL NECESSARY SERVICING, REPAIR OR CORRECTION.",
+    "version": "0.1",
     "license": "MIT",
-    "homepage":"http://rocketbot.co/",
+    "homepage": "http://rocketbot.co/",
     "linux": true,
-    "windows":true,
-    "mac":true,
-    "docker":true,
+    "windows": true,
+    "mac": true,
+    "docker": true,
     "name": "castj2py",
     "dependencies": {
-
+        "castj2py": "file:"
     },
     "title": {
         "en": "Cast Json to Py",
@@ -24,7 +24,7 @@
                 "title": "Convert JSON 2 Python",
                 "description": "This module convert JSON bot to Python bot compatible with selenium",
                 "title_options": "",
-                "options":null
+                "options": null
             },
             "es": {
                 "title": "Convertir JSON a Python",
@@ -35,9 +35,9 @@
             "form": {
                 "css": "modal-lg",
                 "inputs": [
-                     {
+                    {
                         "type": "input",
-                        "placeholder":"Bot Name",
+                        "placeholder": "Bot Name",
                         "title": {
                             "es": "Insert bot name",
                             "en": "Ingrese el nombre del bot"
@@ -56,9 +56,9 @@
             "father": "module",
             "group": "scripts",
             "linux": true,
-            "windows":true,
-            "mac":true,
-            "docker":true
+            "windows": true,
+            "mac": true,
+            "docker": true
         }
     ]
 }
