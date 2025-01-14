@@ -1,0 +1,12 @@
+{
+    "execJs" : "bot.scrap.js.execute",
+    "evaluateIf" : "if",
+    "execRocketBotDB" : "bot.execute_bot",
+    "else": "else",
+    "for": "for",
+    "evaluatewhile": "while",
+    "break": "break",
+    "trycatch": "try",
+    "setVar" : "=",
+    "wait" : "time.sleep"
+}

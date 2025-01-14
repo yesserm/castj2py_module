@@ -16,6 +16,7 @@ def translate_j_to_py(j_cod, conversion_d, level=0):
 
     group = py_cod['group']
     comando = json.dumps(py_cod['command'])
+    comand = py_cod['command'].replace("{", "").replace("}", "")   
     if isinstance(py_cod, dict) and 'father' in py_cod and py_cod['father'] in conversion_d:
         
         # se evalua cada grupo
@@ -28,8 +29,7 @@ def translate_j_to_py(j_cod, conversion_d, level=0):
                     python_code += f'{current_indent}{var} = {conversion_d[py_cod["father"]]}(f{comando})' + '\n'
 
         elif group == 'logic':       
-            if str(py_cod['father']).lower() == 'evaluateif':
-                comand = py_cod['command'].replace("{", "").replace("}", "")     
+            if str(py_cod['father']).lower() == 'evaluateif':    
                 python_code += f'{current_indent}{conversion_d[py_cod["father"]]}'+' '+f'{comand}:' + '\n'
 
                 # Procesa los hijos del bloque "if"
@@ -55,7 +55,7 @@ def translate_j_to_py(j_cod, conversion_d, level=0):
                     python_code += translate_j_to_py(child, conversion_d, level + 1)
 
             elif str(py_cod['father']).lower() == 'evaluatewhile':
-                comand = py_cod['command'].replace("{", "").replace("}", "")     
+  
                 python_code += f'{current_indent}{conversion_d[py_cod["father"]]}'+' '+f'{comand}:' + '\n'
 
                 # Procesa los hijos del bloque "While"
@@ -76,7 +76,16 @@ def translate_j_to_py(j_cod, conversion_d, level=0):
 
                   # Procesa los hijos del bloque "execpt"
                 for child in py_cod['else']:
-                    python_code += translate_j_to_py(child, conversion_d, level + 1)              
+                    python_code += translate_j_to_py(child, conversion_d, level + 1)       
+
+        elif group == 'system':        
+            if str(py_cod['father']).lower() == 'setvar':
+                var = py_cod['var']    
+                python_code += f'{current_indent}{var} {conversion_d[py_cod["father"]]} {comand}'
+
+            elif str(py_cod['father']).lower() == 'wait':
+                 print("\n entro")
+                 python_code += f'{current_indent}{conversion_d[py_cod["father"]]}(float({comand}))'        
                 
 
     else:

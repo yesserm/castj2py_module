@@ -19,10 +19,10 @@ try:
         ruta_bot = os.path.join(current_path, 'modules', 'castj2py', 'samples', f'{bot_name_lower}.py')
         if not os.path.exists(ruta_bot):
             with open(ruta_bot, 'w') as file:
-                file.write('import json\n')
+                file.write('import json\n'  + 'import time\n')
         else:
             with open(ruta_bot, 'w') as file:
-                file.write('import json\n')
+                file.write('import json\n' + 'import time\n')
         # Initializar la database
         main()
         run(bot_name, ruta_bot)
