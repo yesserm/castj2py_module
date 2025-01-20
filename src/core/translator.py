@@ -2,9 +2,11 @@ import json
 import logging
 
 logger = logging.getLogger('app_logger')
-
+object_select = ""
+object_select_type = ""
 
 def translate_j_to_py(j_cod, conversion_d, level=0):
+    global object_select, object_select_type
     py_cod = j_cod
     print(f"\n code : {py_cod}")
     python_code = ''
@@ -27,6 +29,51 @@ def translate_j_to_py(j_cod, conversion_d, level=0):
                     python_code += f'{current_indent}{conversion_d[py_cod["father"]]}(f{comando})' + '\n'
                 else:
                     python_code += f'{current_indent}{var} = {conversion_d[py_cod["father"]]}(f{comando})' + '\n'
+            elif str(py_cod['father']).lower() == 'waitforobject':
+                comando_json= json.loads(py_cod['command'])
+                object_select = str(comando_json["object"])
+                object_select_type = str(py_cod["option"])
+
+                if int(comando_json['before']) != 0:
+                    python_code += f'{current_indent}time.sleep({comando_json["before"]})' + '\n'
+ 
+                python_code += f'{current_indent}{py_cod["getvar"]} = {conversion_d[py_cod["father"]]}(\"{comando_json["wait_for"]}\",\"{py_cod["option"]}\",\"{comando_json["object"]}\",{comando_json["wait_time"]})' + '\n'
+
+                if int(comando_json['after']) != 0:
+                    python_code += f'{current_indent}time.sleep({comando_json["after"]})' + '\n'
+
+            elif str(py_cod['father']).lower() == 'sendkeyweb':
+                python_code += f'{current_indent}{conversion_d[py_cod["father"]]}(\"{py_cod["option"]}\",\"{object_select}\",\"{object_select_type}\",{comando})' + '\n'
+            
+            elif str(py_cod['father']).lower() == 'clickweb':
+                object_select = str(comand)
+                object_select_type = str(py_cod["option"])
+
+                python_code += f'{current_indent}{conversion_d[py_cod["father"]]}({comando},0,\"{py_cod["option"]}\")' + '\n'
+
+            elif str(py_cod['father']).lower() == 'openurl':
+                python_code += f'{current_indent}{conversion_d[py_cod["father"]]}({comando})' + '\n'
+
+            elif str(py_cod['father']).lower() == 'countwindow':
+                python_code += f'{comand} = {conversion_d[py_cod["father"]]}()' + '\n'
+            elif str(py_cod['father']).lower() == 'closewindow':
+                python_code += f'{conversion_d[py_cod["father"]]}(\"{py_cod["option"]}\", {comando})' + '\n'
+            elif str(py_cod['father']).lower() == 'getwindowhandle':
+                python_code += f'{comand} = {conversion_d[py_cod["father"]]}()' + '\n'
+            elif str(py_cod['father']).lower() == 'getwindowtitle':
+                python_code += f'{comand} = {conversion_d[py_cod["father"]]}()' + '\n'
+            elif str(py_cod['father']).lower() == 'switchtowindow':
+                python_code += f'{conversion_d[py_cod["father"]]}({comand},\"{py_cod["option"]}\")' + '\n'
+            elif str(py_cod['father']).lower() == 'maximize':
+                python_code += f'{conversion_d[py_cod["father"]]}()' + '\n'
+            elif str(py_cod['father']).lower() == 'minimize':
+                python_code += f'{conversion_d[py_cod["father"]]}()' + '\n'
+            elif str(py_cod['father']).lower() == 'killdriver':
+                python_code += f'{conversion_d[py_cod["father"]]}()' + '\n'
+            elif str(py_cod['father']).lower() == 'swichtoframe':
+                python_code += f'{conversion_d[py_cod["father"]]}({comando},\"{py_cod["option"]}\")' + '\n'
+            elif str(py_cod['father']).lower() == 'swichtodefaultcontent': 
+                python_code += f'{conversion_d[py_cod["father"]]}()' + '\n'
 
         elif group == 'logic':       
             if str(py_cod['father']).lower() == 'evaluateif':    
@@ -81,11 +128,11 @@ def translate_j_to_py(j_cod, conversion_d, level=0):
         elif group == 'system':        
             if str(py_cod['father']).lower() == 'setvar':
                 var = py_cod['var']    
-                python_code += f'{current_indent}{var} {conversion_d[py_cod["father"]]} {comand}'
+                python_code += f'{current_indent}{var} {conversion_d[py_cod["father"]]} {comand}' + '\n'
 
             elif str(py_cod['father']).lower() == 'wait':
                  print("\n entro")
-                 python_code += f'{current_indent}{conversion_d[py_cod["father"]]}(float({comand}))'        
+                 python_code += f'{current_indent}{conversion_d[py_cod["father"]]}(float({comand}))' + '\n'        
                 
 
     else:

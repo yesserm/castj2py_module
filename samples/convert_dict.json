@@ -8,5 +8,19 @@
     "break": "break",
     "trycatch": "try",
     "setVar" : "=",
-    "wait" : "time.sleep"
+    "wait" : "time.sleep",
+    "waitforobject" : "bot.scrap.wait_for_object",
+    "sendKeyWeb": "bot.scrap.send_key_web",
+    "clickWeb": "bot.scrap.click_and_wait_if_neccesary",
+    "openUrl": "bot.scrap.load_url",
+    "countwindow": "bot.scrap.count_window",
+    "closewindow": "bot.scrap.close_window",
+    "getWindowHandle": "bot.scrap.get_window_handle",
+    "getWindowTitle": "bot.scrap.get_window_title",
+    "switchToWindow": "bot.scrap.switch_to_window",
+    "maximize": "bot.scrap.maximize",
+    "minimize": "bot.scrap.minimize",
+    "killdriver": "bot.scrap.kill_driver",
+    "swichtoframe": "bot.scrap.swich_to_frame",
+    "swichtodefaultcontent" : "bot.scrap.swich_to_default_content"
 }
