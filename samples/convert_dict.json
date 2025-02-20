@@ -1,5 +1,5 @@
 {
-    "execJs" : "bot.scrap.js.execute",
+    "execJs" : "bot.driver.execute_script",
     "evaluateIf" : "if",
     "execRocketBotDB" : "bot.execute_bot",
     "else": "else",
@@ -7,7 +7,7 @@
     "evaluatewhile": "while",
     "break": "break",
     "trycatch": "try",
-    "setVar" : "=",
+    "setVar" : "bot.setvar",
     "wait" : "time.sleep",
     "waitforobject" : "bot.scrap.wait_for_object",
     "sendKeyWeb": "bot.scrap.send_key_web",

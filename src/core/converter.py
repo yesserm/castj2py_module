@@ -18,7 +18,9 @@ def convert_json_decoded_to_python(json_decoded, output_file_path, conversion_di
             for command in all_comands_json:
                 if command is not None:
                     try:
-                        python_code = translate_j_to_py(command, conversion_dict)
+                        print("\nSALIDA FILE1",  output_file_path)
+                        python_code= translate_j_to_py(command, conversion_dict, output_file_path)
+
                         logger.debug(f"Python code: {python_code}")
                         python_code = python_code + '\n'
                         with open(output_file_path, 'a') as file:
@@ -70,3 +72,4 @@ def load_json_dict(path_json):
         json_d = json.load(file)
         json_dict = json_d
     return json_d
+
