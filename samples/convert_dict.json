@@ -22,5 +22,8 @@
     "minimize": "bot.scrap.minimize",
     "killdriver": "bot.scrap.kill_driver",
     "swichtoframe": "bot.scrap.swich_to_frame",
-    "swichtodefaultcontent" : "bot.scrap.swich_to_default_content"
+    "swichtodefaultcontent" : "bot.scrap.swich_to_default_content",
+    "module": "bot",
+    "carrierAlert" : "bot.carrier_alert"
+
 }

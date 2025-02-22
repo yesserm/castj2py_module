@@ -18,7 +18,7 @@ def convert_json_decoded_to_python(json_decoded, output_file_path, conversion_di
             for command in all_comands_json:
                 if command is not None:
                     try:
-                        print("\nSALIDA FILE1",  output_file_path)
+                      
                         python_code= translate_j_to_py(command, conversion_dict, output_file_path)
 
                         logger.debug(f"Python code: {python_code}")

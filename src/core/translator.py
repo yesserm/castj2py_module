@@ -54,10 +54,13 @@ logger = logging.getLogger('app_logger')
 object_select = ""
 object_select_type = ""
 list_vars = []
+list_vars_bot = []
 
 def translate_j_to_py(j_cod, conversion_d, output_file_path, level=1):
     global object_select, object_select_type, list_vars
     py_cod = j_cod
+
+
     vars_add = []
     python_code = ''
 
@@ -68,24 +71,22 @@ def translate_j_to_py(j_cod, conversion_d, output_file_path, level=1):
 
     group = py_cod['group']
     comando = json.dumps(py_cod['command'])
+    vars_in_command = list(set(re.findall(r'\{(.*?)\}', comando)))
     comand = re.sub(r'["\']?\{([^}]*)\}["\']?', r'\1', py_cod['command'])
     if isinstance(py_cod, dict) and 'father' in py_cod and py_cod['father'] in conversion_d:
         
         # se evalua cada grupo
-        if group == 'web':   
+        if group == 'scripts':
+            if str(py_cod['father']).lower() == 'execrocketbotdb':    
+                python_code += f'{current_indent}{conversion_d[py_cod["father"]]}()'+'\n'
+        elif group == 'web':   
             if str(py_cod['father']).lower() == 'execjs':
                 var = py_cod['getvar']
 
                 comando, varss =  extract_vars(eval(comando))  
-                missing_vars = [var for var in varss if var not in list_vars]
-                if len(missing_vars) > 0:
-                    vars_add = [f"{var} = {vars_dict[var]}" if var in vars_dict else f"{var} = bot.getvar(\"{var}\")" for var in missing_vars]
-                    list_vars.extend(missing_vars)
-                    inject_vars(vars_add, output_file_path)
+
+                inject_vars(varss, output_file_path)
                     
-
-
-
                 comando = comando.encode().decode('unicode_escape') 
                 comando = aplicar_sangria(comando, current_indent)
 
@@ -95,6 +96,10 @@ def translate_j_to_py(j_cod, conversion_d, output_file_path, level=1):
                     else:            
                         python_code += f'{current_indent}{conversion_d[py_cod["father"]]}(r"""{comando}""")' + '\n'
                 else:
+                    if var not in list_vars:
+                        list_temp = [var]
+                        inject_vars([var], output_file_path)
+               
                     if len(varss) > 0:
                         python_code += f'{current_indent}{var} = {conversion_d[py_cod["father"]]}(r"""{comando}""",{", ".join(varss)})' + '\n'
                     else:
@@ -108,7 +113,6 @@ def translate_j_to_py(j_cod, conversion_d, output_file_path, level=1):
                 if int(comando_json['before']) != 0:
                     python_code += f'{current_indent}time.sleep({comando_json["before"]})' + '\n'
  
-                print("\nOBJECTSS", py_cod["getvar"])
                 if py_cod["getvar"] == "":
                     python_code += f'{current_indent}{conversion_d[py_cod["father"]]}(\"{comando_json["wait_for"]}\",\"{py_cod["option"]}\",\"{comando_json["object"]}\",{comando_json["wait_time"]})' + '\n'
                 else:
@@ -130,30 +134,31 @@ def translate_j_to_py(j_cod, conversion_d, output_file_path, level=1):
                 python_code += f'{current_indent}{conversion_d[py_cod["father"]]}({comando})' + '\n'
 
             elif str(py_cod['father']).lower() == 'countwindow':
-                python_code += f'{comand} = {conversion_d[py_cod["father"]]}()' + '\n'
+                python_code += f'{current_indent}{comand} = {conversion_d[py_cod["father"]]}()' + '\n'
             elif str(py_cod['father']).lower() == 'closewindow':
-                python_code += f'{conversion_d[py_cod["father"]]}(\"{py_cod["option"]}\", {comando})' + '\n'
+                python_code += f'{current_indent}{conversion_d[py_cod["father"]]}(\"{py_cod["option"]}\", {comando})' + '\n'
             elif str(py_cod['father']).lower() == 'getwindowhandle':
-                python_code += f'{comand} = {conversion_d[py_cod["father"]]}()' + '\n'
+                python_code += f'{current_indent}{comand} = {conversion_d[py_cod["father"]]}()' + '\n'
             elif str(py_cod['father']).lower() == 'getwindowtitle':
-                python_code += f'{comand} = {conversion_d[py_cod["father"]]}()' + '\n'
+                python_code += f'{current_indent}{comand} = {conversion_d[py_cod["father"]]}()' + '\n'
             elif str(py_cod['father']).lower() == 'switchtowindow':
-                python_code += f'{conversion_d[py_cod["father"]]}({comand},\"{py_cod["option"]}\")' + '\n'
+                python_code += f'{current_indent}{conversion_d[py_cod["father"]]}({comand},\"{py_cod["option"]}\")' + '\n'
             elif str(py_cod['father']).lower() == 'maximize':
-                python_code += f'{conversion_d[py_cod["father"]]}()' + '\n'
+                python_code += f'{current_indent}{conversion_d[py_cod["father"]]}()' + '\n'
             elif str(py_cod['father']).lower() == 'minimize':
-                python_code += f'{conversion_d[py_cod["father"]]}()' + '\n'
+                python_code += f'{current_indent}{conversion_d[py_cod["father"]]}()' + '\n'
             elif str(py_cod['father']).lower() == 'killdriver':
-                python_code += f'{conversion_d[py_cod["father"]]}()' + '\n'
+                python_code += f'{current_indent}{conversion_d[py_cod["father"]]}()' + '\n'
             elif str(py_cod['father']).lower() == 'swichtoframe':
-                python_code += f'{conversion_d[py_cod["father"]]}({comando},\"{py_cod["option"]}\")' + '\n'
+                python_code += f'{current_indent}{conversion_d[py_cod["father"]]}({comando},\"{py_cod["option"]}\")' + '\n'
             elif str(py_cod['father']).lower() == 'swichtodefaultcontent': 
-                python_code += f'{conversion_d[py_cod["father"]]}()' + '\n'
+                python_code += f'{current_indent}{conversion_d[py_cod["father"]]}()' + '\n'
 
         elif group == 'logic':       
             if str(py_cod['father']).lower() == 'evaluateif':    
                 python_code += f'{current_indent}{conversion_d[py_cod["father"]]}'+' '+f'{comand}:' + '\n'
-                print(f"\nIF {comand}")
+                inject_vars(vars_in_command, output_file_path)
+         
                 # Procesa los hijos del bloque "if"
                 for child in py_cod['children']:
                     python_code += translate_j_to_py(child, conversion_d, output_file_path, level + 1)
@@ -204,15 +209,46 @@ def translate_j_to_py(j_cod, conversion_d, output_file_path, level=1):
         elif group == 'system':        
             if str(py_cod['father']).lower() == 'setvar':
                 var = py_cod['var']    
-                if var in list_vars:
+                com = py_cod['command']
+                matches = re.findall(r"\{(.*?)\}", com)
+ 
+                if matches:
+          
+                    for match in matches:
+                        if match not in list_vars:
+                            obten = f"bot.getvar(\"{match}\")"
+                            com = com.replace(f"{{{match}}}", obten)
+                            comand = com
+                if var in list_vars_bot:
                     python_code += f'{current_indent}{var} = {comand}' + '\n'
-                else: 
+                elif var in list_vars: 
+                    python_code += f'{current_indent}{var} = {comand}' + '\n'
+                    python_code += f'{current_indent}{conversion_d[py_cod["father"]]}(\"{var}\",{comand}) ' + '\n'
+                else:
                     python_code += f'{current_indent}{conversion_d[py_cod["father"]]}(\"{var}\",{comand}) ' + '\n'
 
             elif str(py_cod['father']).lower() == 'wait':
           
                  python_code += f'{current_indent}{conversion_d[py_cod["father"]]}(float({comand}))' + '\n'        
                 
+        if py_cod['father'] == 'module':
+            comand_as_json = json.loads(py_cod['command'])
+            modul =  comand_as_json['module']
+            if modul.lower() == 'carrieralert':
+                 python_code += f'{current_indent}{conversion_d[modul]}(f\"{comand_as_json["text"]}\")' + '\n'   
+            elif modul.lower() == 'setvariable':
+                comand_as_json = json.loads(py_cod['command'])  
+                varss = comand_as_json['vars']
+                varss_list = varss.split(",")
+                datas = comand_as_json['data']
+                datas = datas.replace("'", '"') 
+                datas =  json.loads(datas)
+                for i in range(len(varss_list)):
+                    if datas[i] == "":
+                      python_code += f'{current_indent}{varss_list[i]} = \"\"' + '\n'   
+                    else:                    
+                        python_code += f'{current_indent}{varss_list[i]} = {datas[i]}' + '\n' 
+            
 
     else:
         logger.error(f"Error: {py_cod} not found in conversion dictionary")
@@ -227,7 +263,7 @@ def aplicar_sangria(texto, indent):
     return texto_indentado
 
 def translate_var_to_python(j_cod):
-    global list_vars
+    global list_vars, list_vars_bot
     py_cod = j_cod
     indent='    '
     python_code = ''
@@ -243,6 +279,7 @@ def translate_var_to_python(j_cod):
             except json.JSONDecodeError:
                 python_code += f'{indent}{py_cod["name"]} = {json.dumps(var)}' + '\n'
         list_vars.append(py_cod["name"])
+        list_vars_bot.append(py_cod["name"])
     else:
         logger.error(f"Error: {py_cod['name']} not found in conversion dictionary")
     return python_code
@@ -257,10 +294,10 @@ def extract_vars(text):
 
 
             j = i + 1
-            while j < len(text) and j < i + 20:
+            while j < len(text) and j < i + 23:
                 if text[j] == '{':
                     i = j - 1 
-                    print(f"\nBREAK {j-i} {text[j]} {text[j +1]}")
+                   
                     break
                 if text[j] == '}':
                     extracted_texts.append(text[i+1:j])
@@ -274,11 +311,10 @@ def extract_vars(text):
             modified_text += text[i]
         
         i += 1
-    
-    print("EXTRACT", extracted_texts)
+
     filtered_texts = list({
     text for text in extracted_texts 
-    if len(text) > 1 and "," not in text and text.strip() != "" and "=" not in text and '"' not in text and ";" not in text
+    if len(text) > 1 and "," not in text and text.strip() != "" and "=" not in text and '"' not in text and ";" not in text and ":" not in text
     })
   
     output = [f"const {var} = arguments[{i+1}];" for i, var in enumerate(filtered_texts)]
@@ -289,21 +325,27 @@ def extract_vars(text):
 
 
 
-def inject_vars(vars, output_file_path):
-    print("\nProcesando archivo:", output_file_path)
+def inject_vars(varss, output_file_path):
+    global list_vars
+    missing_vars = [var for var in varss if var not in list_vars]
 
-    with open(output_file_path, "r", encoding="utf-8") as file:
-        lines = file.readlines()
+    if len(missing_vars) > 0:
+        vars_add = [f"{var} = {vars_dict[var]}" if var in vars_dict else f"{var} = bot.getvar(\"{var}\")" for var in missing_vars]
+        list_vars.extend(missing_vars)
+     
+
+        with open(output_file_path, "r", encoding="utf-8") as file:
+            lines = file.readlines()
 
 
-    insert_index = None
-    for i, line in enumerate(lines):
-        if line.strip().startswith("def run(bot):"):
-            insert_index = i + 1  
-            break
+        insert_index = None
+        for i, line in enumerate(lines):
+            if line.strip().startswith("def run(bot):"):
+                insert_index = i + 1  
+                break
 
-    for var in reversed(vars):  
-        lines.insert(insert_index, f"    {var}\n") 
+        for var in reversed(vars_add):  
+            lines.insert(insert_index, f"    {var}\n") 
 
-    with open(output_file_path, "w", encoding="utf-8") as file:
-        file.writelines(lines)
+        with open(output_file_path, "w", encoding="utf-8") as file:
+            file.writelines(lines)

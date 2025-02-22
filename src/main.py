@@ -26,7 +26,9 @@ try:
         conversion_dict = conversion_instance.get_conversion_dict()
         bots_names = bots.get_bot_names()
         if bot_name in bots_names:
+      
             bot = bots.get_bots_recent()[bots_names.index(bot_name)]
+           
             bot_data = str(bot[2])
             bot_data_decoded = load_json_from_base64(bot_data.encode())
             convert_json_var_to_python(bot_data_decoded, path)
