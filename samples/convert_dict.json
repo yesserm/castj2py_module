@@ -24,6 +24,10 @@
     "swichtoframe": "bot.scrap.swich_to_frame",
     "swichtodefaultcontent" : "bot.scrap.swich_to_default_content",
     "module": "bot",
-    "carrierAlert" : "bot.carrier_alert"
+    "carrierAlert" : "bot.execute_command",
+    "InstantPrinter": "bot.execute_command",
+    "CleanInputs": "bot.execute_command",
+    "execPython": "bot.execute_bot",
+    "clickPro": "bot.execute_bot"
 
 }

@@ -57,8 +57,9 @@ list_vars = []
 list_vars_bot = []
 
 def translate_j_to_py(j_cod, conversion_d, output_file_path, level=1):
-    global object_select, object_select_type, list_vars
+    global object_select, object_select_type, list_vars, list_vars_bot
     py_cod = j_cod
+    print("\nCODE", py_cod)
 
 
     vars_add = []
@@ -77,8 +78,16 @@ def translate_j_to_py(j_cod, conversion_d, output_file_path, level=1):
         
         # se evalua cada grupo
         if group == 'scripts':
-            if str(py_cod['father']).lower() == 'execrocketbotdb':    
-                python_code += f'{current_indent}{conversion_d[py_cod["father"]]}()'+'\n'
+            if str(py_cod['father']).lower() == 'execrocketbotdb':
+                for var in list_vars_bot:
+                    python_code += f'{current_indent}bot.setvar(\"{var}\", {var})' + '\n'    
+                python_code += f'{current_indent}{conversion_d[py_cod["father"]]}' + f'(f\"C:/DentalRobot/IV/Carriers/Bots/{{bot_name}}/{py_cod["command"]}.py\")' + '\n'
+                inject_vars(["bot_name"], output_file_path)
+            if str(py_cod['father']).lower() == 'execpython': 
+                if py_cod["var"] != "":
+                    python_code += f'{current_indent}{conversion_d[py_cod["father"]]}({py_cod["var"]}, bot)'+'\n'
+                else: 
+                    python_code += f'{current_indent}{conversion_d[py_cod["father"]]}({comando}, bot)'+'\n'
         elif group == 'web':   
             if str(py_cod['father']).lower() == 'execjs':
                 var = py_cod['getvar']
@@ -234,20 +243,42 @@ def translate_j_to_py(j_cod, conversion_d, output_file_path, level=1):
         if py_cod['father'] == 'module':
             comand_as_json = json.loads(py_cod['command'])
             modul =  comand_as_json['module']
-            if modul.lower() == 'carrieralert':
-                 python_code += f'{current_indent}{conversion_d[modul]}(f\"{comand_as_json["text"]}\")' + '\n'   
-            elif modul.lower() == 'setvariable':
-                comand_as_json = json.loads(py_cod['command'])  
-                varss = comand_as_json['vars']
-                varss_list = varss.split(",")
-                datas = comand_as_json['data']
-                datas = datas.replace("'", '"') 
-                datas =  json.loads(datas)
-                for i in range(len(varss_list)):
-                    if datas[i] == "":
-                      python_code += f'{current_indent}{varss_list[i]} = \"\"' + '\n'   
-                    else:                    
-                        python_code += f'{current_indent}{varss_list[i]} = {datas[i]}' + '\n' 
+            print(f"\nComando json {len(comand_as_json)} ",comand_as_json )
+            if len(comand_as_json)  > 2:
+                if modul.lower() == 'carrieralert':
+                    python_code += f'{current_indent}{conversion_d[modul]}(module=\"{comand_as_json["module_name"]}\", command=\"{modul}\",  params={{ \'text\': f\"{comand_as_json["text"]}\"}})' + '\n'  
+                elif modul.lower() == 'instantprinter':
+                    python_code += f'{current_indent}{conversion_d[modul]}(module=\"{comand_as_json["module_name"]}\", command=\"{modul}\",  params={{ \'onlyMove\': {comand_as_json["onlyMove"]}, \'waitDocument\': {comand_as_json["waitDocument"]}}})' + '\n'  
+                elif modul.lower() == 'cleaninputs':
+                    var = comand_as_json["texto"].replace('{', '').replace('}', '')
+                    inject_vars([var], output_file_path)
+                    python_code += f'{current_indent}{conversion_d[modul]}(module=\"{comand_as_json["module_name"]}\", command=\"{modul}\",  params={{ \'search_data\': \"{comand_as_json["search_data"]}\", \'texto\': {comand_as_json["texto"]}, \'tipo\': \"{comand_as_json["tipo"]}\" }})' + '\n'            
+                elif modul.lower() == 'clickpro':  
+                    python_code += f'{current_indent}{conversion_d[modul]}(module=\"{comand_as_json["module_name"]}\", command=\"{modul}\",  params={{ \'data\': \"{comand_as_json["data"]}\", \'data_type\': \"{comand_as_json["data_type"]}\", \'wait\': {comand_as_json["wait"]} }})' + '\n'                                      
+                elif modul.lower() == 'setvariable':
+                    comand_as_json = json.loads(py_cod['command'])  
+                    varss = comand_as_json['vars']
+                    varss_list = varss.split(",")
+                    datas = comand_as_json['data']
+                    datas = datas.replace("'", '"') 
+                    datas =  json.loads(datas)
+                    for i in range(len(varss_list)):
+                        if datas[i] == "":
+                            if varss_list[i] in list_vars:
+                                python_code += f'{current_indent}{varss_list[i]} = \"\"' + '\n' 
+                            else:                     
+                                python_code += f'{current_indent}bot.setvar(\"{varss_list[i]}\" = \"\")' + '\n'   
+                        else:  
+                            if varss_list[i] in list_vars:                  
+                                python_code += f'{current_indent}{varss_list[i]} = {datas[i]}' + '\n' 
+                            else:
+                                python_code += f'{current_indent}bot.setvar(\"{varss_list[i]}\", {datas[i]})' + '\n'
+                else: 
+                    logger.error(f"Error: {modul} not found in conversion dictionary")
+            else:
+                python_code += f'{current_indent}bot.execute_command(module=\"{comand_as_json["module_name"]}\", command=\"{modul}\")' + '\n'  
+
+
             
 
     else:
