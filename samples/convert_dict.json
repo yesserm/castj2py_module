@@ -8,7 +8,7 @@
     "break": "break",
     "trycatch": "try",
     "setVar" : "bot.setvar",
-    "wait" : "time.sleep",
+    "wait" : "sleep",
     "waitforobject" : "bot.scrap.wait_for_object",
     "sendKeyWeb": "bot.scrap.send_key_web",
     "clickWeb": "bot.scrap.click_and_wait_if_neccesary",
@@ -25,9 +25,16 @@
     "swichtodefaultcontent" : "bot.scrap.swich_to_default_content",
     "module": "bot",
     "carrierAlert" : "bot.execute_command",
+    "GetHandle": "bot.execute_command",
     "InstantPrinter": "bot.execute_command",
     "CleanInputs": "bot.execute_command",
     "execPython": "bot.execute_bot",
-    "clickPro": "bot.execute_bot"
-
+    "clickPro": "bot.execute_bot",
+    "carrierAlert2FA": "bot.execute_bot",
+    "changeIframePro": "bot.execute_bot",
+    "injectjs": "bot.driver.execute_script",
+    "chromeMode": "bot.execute_command",
+    "cleanVars": "bot.execute_command",
+    "openBrowser": "bot.execute_command",
+    "sendkeys": "bot.execute_command"
 }

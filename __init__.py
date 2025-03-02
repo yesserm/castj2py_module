@@ -20,7 +20,7 @@ try:
         ruta_bot = os.path.join(current_path, 'modules', 'castj2py', 'samples', f'{bot_name_lower}.py')
         if not os.path.exists(ruta_bot):
             with open(ruta_bot, 'w') as file:
-                file.write('import json\n'  + 'import time\n' + 'def run(bot):\n')
+                file.write('import json\n'  + 'from time import sleep\n' + 'import requests\n' + 'def run(bot):\n')
         else:
             with open(ruta_bot, 'w') as file:
                 file.write('import json\n' + 'import time\n' + 'def run(bot):\n')

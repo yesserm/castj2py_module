@@ -23,7 +23,7 @@ def convert_json_decoded_to_python(json_decoded, output_file_path, conversion_di
 
                         logger.debug(f"Python code: {python_code}")
                         python_code = python_code + '\n'
-                        with open(output_file_path, 'a') as file:
+                        with open(output_file_path, 'a', encoding='utf-8') as file:
                             file.write(python_code)
                         logger.info(f"Conversion complete. Saved to {output_file_path}")
                     except Exception as e:
@@ -46,7 +46,7 @@ def convert_json_var_to_python(json_decoded, output_file_path):
                     try:
                         python_code = translate_var_to_python(var)
                         python_code = python_code + '\n'
-                        with open(output_file_path, 'a') as file:
+                        with open(output_file_path, 'a', encoding='utf-8') as file:
                             file.write(python_code)
                         logger.info(f"Conversion complete. Saved to {output_file_path}")
                     except Exception as e:

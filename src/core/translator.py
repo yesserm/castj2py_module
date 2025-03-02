@@ -2,6 +2,8 @@ import json
 import logging
 import re
 
+
+
 vars_dict = {
     "configP": "bot.configP",
     "bot_name": "bot.bot_name",
@@ -59,7 +61,7 @@ list_vars_bot = []
 def translate_j_to_py(j_cod, conversion_d, output_file_path, level=1):
     global object_select, object_select_type, list_vars, list_vars_bot
     py_cod = j_cod
-    print("\nCODE", py_cod)
+    #print("\nCODE", py_cod)
 
 
     vars_add = []
@@ -113,14 +115,17 @@ def translate_j_to_py(j_cod, conversion_d, output_file_path, level=1):
                         python_code += f'{current_indent}{var} = {conversion_d[py_cod["father"]]}(r"""{comando}""",{", ".join(varss)})' + '\n'
                     else:
                         python_code += f'{current_indent}{var} = {conversion_d[py_cod["father"]]}(r"""{comando}""")' + '\n'
-
+            elif str(py_cod['father']).lower() == 'injectjs':
+                python_code += f'{current_indent}js =  requests.get({comando}).text' + '\n'
+                python_code += f'{current_indent}{conversion_d[py_cod["father"]]}(js)' + '\n'
+            
             elif str(py_cod['father']).lower() == 'waitforobject':
                 comando_json= json.loads(py_cod['command'])
                 object_select = str(comando_json["object"])
                 object_select_type = str(py_cod["option"])
 
                 if int(comando_json['before']) != 0:
-                    python_code += f'{current_indent}time.sleep({comando_json["before"]})' + '\n'
+                    python_code += f'{current_indent}sleep({comando_json["before"]})' + '\n'
  
                 if py_cod["getvar"] == "":
                     python_code += f'{current_indent}{conversion_d[py_cod["father"]]}(\"{comando_json["wait_for"]}\",\"{py_cod["option"]}\",\"{comando_json["object"]}\",{comando_json["wait_time"]})' + '\n'
@@ -128,7 +133,7 @@ def translate_j_to_py(j_cod, conversion_d, output_file_path, level=1):
                     python_code += f'{current_indent}{py_cod["getvar"]} = {conversion_d[py_cod["father"]]}(\"{comando_json["wait_for"]}\",\"{py_cod["option"]}\",\"{comando_json["object"]}\",{comando_json["wait_time"]})' + '\n'
 
                 if int(comando_json['after']) != 0:
-                    python_code += f'{current_indent}time.sleep({comando_json["after"]})' + '\n'
+                    python_code += f'{current_indent}sleep({comando_json["after"]})' + '\n'
 
             elif str(py_cod['father']).lower() == 'sendkeyweb':
                 python_code += f'{current_indent}{conversion_d[py_cod["father"]]}(\"{py_cod["option"]}\",\"{object_select}\",\"{object_select_type}\",{comando})' + '\n'
@@ -222,15 +227,22 @@ def translate_j_to_py(j_cod, conversion_d, output_file_path, level=1):
                 matches = re.findall(r"\{(.*?)\}", com)
  
                 if matches:
+                    print("\nMACHES", matches)
           
                     for match in matches:
                         if match not in list_vars:
-                            obten = f"bot.getvar(\"{match}\")"
-                            com = com.replace(f"{{{match}}}", obten)
-                            comand = com
+                            if match != '' and ":" not in match and "," not in match:
+                                print("ENTRO")
+                                obten = f'bot.getvar(\"{match}\")'
+                                com = com.replace(f"\"{{{match}}}\"", obten)
+                                com = com.replace(f"{{{match}}}", obten)
+                                comand = com
+                            else:
+                                comand = com
                 if var in list_vars_bot:
                     python_code += f'{current_indent}{var} = {comand}' + '\n'
                 elif var in list_vars: 
+     
                     python_code += f'{current_indent}{var} = {comand}' + '\n'
                     python_code += f'{current_indent}{conversion_d[py_cod["father"]]}(\"{var}\",{comand}) ' + '\n'
                 else:
@@ -243,12 +255,30 @@ def translate_j_to_py(j_cod, conversion_d, output_file_path, level=1):
         if py_cod['father'] == 'module':
             comand_as_json = json.loads(py_cod['command'])
             modul =  comand_as_json['module']
-            print(f"\nComando json {len(comand_as_json)} ",comand_as_json )
+          
             if len(comand_as_json)  > 2:
                 if modul.lower() == 'carrieralert':
                     python_code += f'{current_indent}{conversion_d[modul]}(module=\"{comand_as_json["module_name"]}\", command=\"{modul}\",  params={{ \'text\': f\"{comand_as_json["text"]}\"}})' + '\n'  
+                elif modul.lower() == 'carrieralert2fa':
+                    python_code += f'{current_indent}{conversion_d[modul]}(module=\"{comand_as_json["module_name"]}\", command=\"{modul}\",  params={{ \'text\': f\"{comand_as_json["text"]}\"}})' + '\n'                 
+                elif modul.lower() == 'gethandle':
+                    python_code += f'{current_indent}{conversion_d[modul]}(module=\"{comand_as_json["module_name"]}\", command=\"{modul}\",  params={{ \'var\': f\"{comand_as_json["var"]}\"}})' + '\n'    
+                elif modul.lower() == 'cleanvars':
+                    variables = comand_as_json["vars"].split(",")
+                    for var in variables:
+                        if var in list_vars:
+                            python_code += f'{current_indent}{var} = \"\"' + '\n'
+                    python_code += f'{current_indent}{conversion_d[modul]}(module=\"{comand_as_json["module_name"]}\", command=\"{modul}\",  params={{ \'vars\': \"{comand_as_json["vars"]}\"}})' + '\n'                      
+                elif modul.lower() == 'chromemode':
+                    python_code += f'{current_indent}{conversion_d[modul]}(module=\"{comand_as_json["module_name"]}\", command=\"{modul}\",  params={{ \'mode\': \" {comand_as_json["mode"]}\", \'url\': {var_in_text(comand_as_json["url"])}}})' + '\n'                  
+                elif modul.lower() == 'sendkeys':
+                    python_code += f'{current_indent}{conversion_d[modul]}(module=\"{comand_as_json["module_name"]}\", command=\"{modul}\",  params={{ \'special\': \" {comand_as_json["special"]}\", \'text\': f{var_in_text(comand_as_json.get("text",""))}}})' + '\n'                  
+                elif modul.lower() == 'openbrowser':
+                    python_code += f'{current_indent}{conversion_d[modul]}(module=\"{comand_as_json["module_name"]}\", command=\"{modul}\",  params={{ \'profile_chrome\': {var_in_text(comand_as_json["profile_chrome"])}, \'timeout_chrome\': {comand_as_json["timeout_chrome"]},\'url_chrome\': {var_in_text(comand_as_json["url_chrome"])} }})' + '\n'  
                 elif modul.lower() == 'instantprinter':
                     python_code += f'{current_indent}{conversion_d[modul]}(module=\"{comand_as_json["module_name"]}\", command=\"{modul}\",  params={{ \'onlyMove\': {comand_as_json["onlyMove"]}, \'waitDocument\': {comand_as_json["waitDocument"]}}})' + '\n'  
+                elif modul.lower() == 'changeiframepro':
+                    python_code += f'{current_indent}{conversion_d[modul]}(module=\"{comand_as_json["module_name"]}\", command=\"{modul}\",  params={{ \'data_type\': \"{comand_as_json["data_type"]}\", \'data\': \"{comand_as_json["data"]}\" , \'wait\': {comand_as_json["wait"]}}})' + '\n'                  
                 elif modul.lower() == 'cleaninputs':
                     var = comand_as_json["texto"].replace('{', '').replace('}', '')
                     inject_vars([var], output_file_path)
@@ -267,7 +297,7 @@ def translate_j_to_py(j_cod, conversion_d, output_file_path, level=1):
                             if varss_list[i] in list_vars:
                                 python_code += f'{current_indent}{varss_list[i]} = \"\"' + '\n' 
                             else:                     
-                                python_code += f'{current_indent}bot.setvar(\"{varss_list[i]}\" = \"\")' + '\n'   
+                                python_code += f'{current_indent}bot.setvar(\"{varss_list[i]}\", \"\")' + '\n'   
                         else:  
                             if varss_list[i] in list_vars:                  
                                 python_code += f'{current_indent}{varss_list[i]} = {datas[i]}' + '\n' 
@@ -315,6 +345,10 @@ def translate_var_to_python(j_cod):
         logger.error(f"Error: {py_cod['name']} not found in conversion dictionary")
     return python_code
 
+def var_in_text(text):
+    if text == "":
+        return "\"\""
+    return text if text.replace('{', '').replace('}', '') in list_vars else 'bot.getvar(\"' +  text.replace('{', '').replace('}', '') + '\")'
 def extract_vars(text):
     modified_text = ""
     extracted_texts = []
@@ -345,7 +379,7 @@ def extract_vars(text):
 
     filtered_texts = list({
     text for text in extracted_texts 
-    if len(text) > 1 and "," not in text and text.strip() != "" and "=" not in text and '"' not in text and ";" not in text and ":" not in text
+    if len(text) > 1 and "," not in text and text.strip() != "" and "=" not in text and '"' not in text and ";" not in text and ":" not in text and "." not in text
     })
   
     output = [f"const {var} = arguments[{i+1}];" for i, var in enumerate(filtered_texts)]
