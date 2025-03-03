@@ -4,7 +4,7 @@ import base64
 import os
 
 from .json_loader import get_all_commands, get_all_vars
-from .translator import translate_j_to_py, translate_var_to_python
+from .translator import translate_j_to_py, translate_var_to_python, clean_vars_list
 
 logger = logging.getLogger('app_logger')
 
@@ -13,6 +13,7 @@ json_dict = {}
 
 def convert_json_decoded_to_python(json_decoded, output_file_path, conversion_dict):
     if os.path.exists(output_file_path):
+
         try:
             all_comands_json = get_all_commands(json_decoded)
             for command in all_comands_json:
@@ -41,6 +42,7 @@ def convert_json_var_to_python(json_decoded, output_file_path):
     if os.path.exists(output_file_path):
         try:
             all_vars = get_all_vars(json_decoded)
+            clean_vars_list()
             for var in all_vars:
                 if var is not None:
                     try:

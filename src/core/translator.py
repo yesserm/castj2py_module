@@ -87,6 +87,7 @@ def translate_j_to_py(j_cod, conversion_d, output_file_path, level=1):
                 inject_vars(["bot_name"], output_file_path)
             if str(py_cod['father']).lower() == 'execpython': 
                 if py_cod["var"] != "":
+                    inject_vars([py_cod['var']], output_file_path)
                     python_code += f'{current_indent}{conversion_d[py_cod["father"]]}({py_cod["var"]}, bot)'+'\n'
                 else: 
                     python_code += f'{current_indent}{conversion_d[py_cod["father"]]}({comando}, bot)'+'\n'
@@ -227,12 +228,12 @@ def translate_j_to_py(j_cod, conversion_d, output_file_path, level=1):
                 matches = re.findall(r"\{(.*?)\}", com)
  
                 if matches:
-                    print("\nMACHES", matches)
+              
           
                     for match in matches:
                         if match not in list_vars:
                             if match != '' and ":" not in match and "," not in match:
-                                print("ENTRO")
+                                
                                 obten = f'bot.getvar(\"{match}\")'
                                 com = com.replace(f"\"{{{match}}}\"", obten)
                                 com = com.replace(f"{{{match}}}", obten)
@@ -258,7 +259,11 @@ def translate_j_to_py(j_cod, conversion_d, output_file_path, level=1):
           
             if len(comand_as_json)  > 2:
                 if modul.lower() == 'carrieralert':
-                    python_code += f'{current_indent}{conversion_d[modul]}(module=\"{comand_as_json["module_name"]}\", command=\"{modul}\",  params={{ \'text\': f\"{comand_as_json["text"]}\"}})' + '\n'  
+                    if '{' in  comand_as_json["text"] and comand_as_json["text"].replace('{', '').replace('}', '') not in list_vars:
+                        text = var_in_text(comand_as_json["text"])
+                    else:
+                        text =  f'f\"{var_in_text(comand_as_json["text"])}\"' if '"' not in comand_as_json["text"] else f'{comand_as_json["text"]}'
+                    python_code += f'{current_indent}{conversion_d[modul]}(module=\"{comand_as_json["module_name"]}\", command=\"{modul}\",  params={{ \'text\': {text}}})' + '\n'  
                 elif modul.lower() == 'carrieralert2fa':
                     python_code += f'{current_indent}{conversion_d[modul]}(module=\"{comand_as_json["module_name"]}\", command=\"{modul}\",  params={{ \'text\': f\"{comand_as_json["text"]}\"}})' + '\n'                 
                 elif modul.lower() == 'gethandle':
@@ -329,8 +334,9 @@ def translate_var_to_python(j_cod):
     indent='    '
     python_code = ''
     logger.debug(f"Variable to convert: {py_cod['name']}")
-    if isinstance(py_cod, dict) and 'name' in py_cod:
+    if isinstance(py_cod, dict) and 'name' in py_cod and '*' not in py_cod["name"]:
         var = py_cod["data"]
+        print("\n VAR", py_cod["name"])
         if var.lower() == 'true' or var.lower() == 'false':
             python_code += f'{indent}{py_cod["name"]} = {var}' + '\n'
         else:
@@ -348,7 +354,10 @@ def translate_var_to_python(j_cod):
 def var_in_text(text):
     if text == "":
         return "\"\""
-    return text if text.replace('{', '').replace('}', '') in list_vars else 'bot.getvar(\"' +  text.replace('{', '').replace('}', '') + '\")'
+    if '{' in text and '}' in text:
+        return text if text.replace('{', '').replace('}', '') in list_vars else 'bot.getvar(\"' +  text.replace('{', '').replace('}', '') + '\")'
+    else:
+        return text
 def extract_vars(text):
     modified_text = ""
     extracted_texts = []
@@ -414,3 +423,8 @@ def inject_vars(varss, output_file_path):
 
         with open(output_file_path, "w", encoding="utf-8") as file:
             file.writelines(lines)
+
+def clean_vars_list():
+    global list_vars, list_vars_bot
+    list_vars = []
+    list_vars_bot = []

@@ -39,8 +39,8 @@
                         "type": "input",
                         "placeholder": "Bot Name",
                         "title": {
-                            "es": "Insert bot name",
-                            "en": "Ingrese el nombre del bot"
+                            "es": "Insert bot name for example Dentegra",
+                            "en": "Ingrese el nombre del bot por ejemplo Dentegra"
                         },
                         "id": "inputBotName",
                         "css": "col-md-12"
