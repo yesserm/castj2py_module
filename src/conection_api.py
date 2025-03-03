@@ -1,27 +1,19 @@
 import requests
+from base64 import b64decode
 
 URL = "https://carriers.dentalautomation.ai/api/"
 URL_API = "https://carriersync.dentalautomation.ai/api/"
-Token = ""
+Token = ""                                                      
 
-# inicio de sesion en CCC
-def sigin():
-    global URL, Token
-    credentials = {"username": "user", "password": "pass"}
-    response = requests.post(URL + "signin", json=credentials)
-    if response.status_code == 200:
-        Token = response.json()["token"]
-        print("\n TOKEN", Token)
-    else:
-        print("Sigin failed", response.status_code)
 
 # Se obtiene el id del Bot
-def get_id_bot(bot_name):
+def get_id_bot(bot_name, token):
     global URL_API, Token
+    Token = needs_decode(token)
     bot_id = "None"
     if Token == "":
-        sigin()
-    headers = {"x-access-token": Token}
+        print("Token not found")
+    headers = {"x-access-token":Token}
     response = requests.get(URL_API + "v1/bots", headers=headers)
     if response.status_code == 200:
         for bot in response.json()["data"]:
@@ -55,6 +47,7 @@ def get_file_bot(file_name):
         return response.json()
 
 
-
+def needs_decode(token):
+    return b64decode(token.encode()).decode()
 
 

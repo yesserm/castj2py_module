@@ -15,8 +15,9 @@ try:
     module = GetParams("module")
 
     if module == "convertJson2Py":
+        token = GetVar("carriers_token")
         bot_name = GetParams("inputBotName")
-        bot_id = get_id_bot(bot_name)
+        bot_id = get_id_bot(bot_name, token)
 
         if(bot_id == None):
             print("\n")
