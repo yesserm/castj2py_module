@@ -336,7 +336,7 @@ def translate_var_to_python(j_cod):
     logger.debug(f"Variable to convert: {py_cod['name']}")
     if isinstance(py_cod, dict) and 'name' in py_cod and '*' not in py_cod["name"]:
         var = py_cod["data"]
-        print("\n VAR", py_cod["name"])
+
         if var.lower() == 'true' or var.lower() == 'false':
             python_code += f'{indent}{py_cod["name"]} = {var}' + '\n'
         else:

@@ -43,7 +43,20 @@
                             "en": "Ingrese el nombre del bot por ejemplo Dentegra"
                         },
                         "id": "inputBotName",
-                        "css": "col-md-12"
+                        "css": "col-md-10"
+                    },
+                    {
+                        "type": "checkbox",
+                        "title": {
+                            "es": "only compile",
+                            "en": "solo compilar"
+                        },
+                        "help": {
+                            "en": "Si ya tienes el bot en formato .py, puedes agregarlo a la carpeta samples y usar esta función para compilarlo a .pyd.",
+                            "es": "If you already have the bot in .py format, you can add it to the samples folder and use this function to compile it to .pyd"
+                        },
+                        "id": "option",
+                        "css": "col-md-6"
                     }
                 ]
             },

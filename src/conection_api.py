@@ -19,10 +19,13 @@ def get_id_bot(bot_name, token):
         for bot in response.json()["data"]:
             if bot["botName"] == bot_name:
                 bot_id = bot["_id"]
-                return bot_id
- 
+    elif response.status_code == 403:
+        print("Token invalido, ejecutar el modulo Get ConfigP")
+        bot_id = "Error"
     else:
+        bot_id = "Error"
         print("Get id bot failed", response.status_code)
+    return bot_id
 
 # Se obtienen los archivos json de los updates del Bot
 def get_updates_bot(bot_id):
