@@ -61,7 +61,7 @@ list_vars_bot = []
 def translate_j_to_py(j_cod, conversion_d, output_file_path, level=1):
     global object_select, object_select_type, list_vars, list_vars_bot
     py_cod = j_cod
-    #print("\nCODE", py_cod)
+    print("\nCODE", py_cod)
 
 
     vars_add = []
@@ -157,7 +157,7 @@ def translate_j_to_py(j_cod, conversion_d, output_file_path, level=1):
             elif str(py_cod['father']).lower() == 'getwindowtitle':
                 python_code += f'{current_indent}{comand} = {conversion_d[py_cod["father"]]}()' + '\n'
             elif str(py_cod['father']).lower() == 'switchtowindow':
-                python_code += f'{current_indent}{conversion_d[py_cod["father"]]}({comand},\"{py_cod["option"]}\")' + '\n'
+                python_code += f'{current_indent}{conversion_d[py_cod["father"]]}(\"{comand}\",\"{py_cod["option"]}\")' + '\n'
             elif str(py_cod['father']).lower() == 'maximize':
                 python_code += f'{current_indent}{conversion_d[py_cod["father"]]}()' + '\n'
             elif str(py_cod['father']).lower() == 'minimize':
@@ -220,26 +220,47 @@ def translate_j_to_py(j_cod, conversion_d, output_file_path, level=1):
                   # Procesa los hijos del bloque "execpt"
                 for child in py_cod['else']:
                     python_code += translate_j_to_py(child, conversion_d, output_file_path, level + 1)       
+        elif group == 'desktop':    
+            if str(py_cod['father']).lower() == 'sendkey':         
+                python_code += f'{current_indent}{conversion_d[py_cod["father"]]}(\"{py_cod["option"]}\",\"{object_select}\",\"{object_select_type}\",{comando})' + '\n'            
+        elif group == 'file':
+            if str(py_cod['father']).lower() == 'deletefile':
+                comando_json= json.loads(py_cod['command']) 
+                var = var_in_text(comando_json.get("to", ""))
+                comando = var_in_text(comando_json["from"])
+                python_code += f'{current_indent}try:' + '\n' 
+                if var == '""':
+                    python_code += f'{next_indent}{conversion_d[py_cod["father"]]}({comando})' + '\n'
+                else:
+                    python_code += f'{next_indent}{var} = {conversion_d[py_cod["father"]]}({comando})' + '\n'      
 
+                python_code += f'{current_indent}except Exception as e:' + '\n'
+                python_code += f'{next_indent}print(f\"Error: {{e}}\")' + '\n'
         elif group == 'system':        
             if str(py_cod['father']).lower() == 'setvar':
                 var = py_cod['var']    
                 com = py_cod['command']
-                matches = re.findall(r"\{(.*?)\}", com)
- 
-                if matches:
-              
-          
-                    for match in matches:
-                        if match not in list_vars:
-                            if match != '' and ":" not in match and "," not in match:
-                                
-                                obten = f'bot.getvar(\"{match}\")'
-                                com = com.replace(f"\"{{{match}}}\"", obten)
-                                com = com.replace(f"{{{match}}}", obten)
-                                comand = com
-                            else:
-                                comand = com
+
+                if '+' in com:
+
+                    comand = resolver_cadena(f'[{com}]')[0]
+                    print("\n COMANDO Resolve", com)
+                else:
+                    matches = re.findall(r"\{(.*?)\}", com)
+                    if matches:
+                
+            
+                        for match in matches:
+                            if match not in list_vars:
+                                if match != '' and ":" not in match and "," not in match:
+                                    
+                                    
+                                    obten = f'bot.getvar(\"{match}\")'
+                                    com = com.replace(f"\"{{{match}}}\"", obten)
+                                    com = com.replace(f"{{{match}}}", obten)
+                                    comand = com
+                                else:
+                                    comand = com
                 if var in list_vars_bot:
                     python_code += f'{current_indent}{var} = {comand}' + '\n'
                 elif var in list_vars: 
@@ -279,9 +300,10 @@ def translate_j_to_py(j_cod, conversion_d, output_file_path, level=1):
                 elif modul.lower() == 'sendkeys':
                     python_code += f'{current_indent}{conversion_d[modul]}(module=\"{comand_as_json["module_name"]}\", command=\"{modul}\",  params={{ \'special\': \" {comand_as_json["special"]}\", \'text\': f{var_in_text(comand_as_json.get("text",""))}}})' + '\n'                  
                 elif modul.lower() == 'openbrowser':
-                    python_code += f'{current_indent}{conversion_d[modul]}(module=\"{comand_as_json["module_name"]}\", command=\"{modul}\",  params={{ \'profile_chrome\': {var_in_text(comand_as_json["profile_chrome"])}, \'timeout_chrome\': {comand_as_json["timeout_chrome"]},\'url_chrome\': {var_in_text(comand_as_json["url_chrome"])} }})' + '\n'  
+                    print("\nCOMANDO", comand_as_json)
+                    python_code += f'{current_indent}{conversion_d[modul]}(module=\"{comand_as_json["module_name"]}\", command=\"{modul}\",  params={{ \'profile_chrome\': {var_in_text(comand_as_json["profile_chrome"])}, \'timeout_chrome\': {comand_as_json.get("timeout_chrome", 0)},\'url_chrome\': {var_in_text(comand_as_json["url_chrome"])} }})' + '\n'  
                 elif modul.lower() == 'instantprinter':
-                    python_code += f'{current_indent}{conversion_d[modul]}(module=\"{comand_as_json["module_name"]}\", command=\"{modul}\",  params={{ \'onlyMove\': {comand_as_json["onlyMove"]}, \'waitDocument\': {comand_as_json["waitDocument"]}}})' + '\n'  
+                    python_code += f'{current_indent}{conversion_d[modul]}(module=\"{comand_as_json["module_name"]}\", command=\"{modul}\",  params={{ \'onlyMove\': {comand_as_json["onlyMove"]}, \'waitDocument\': {comand_as_json.get("waitDocument", 0)}}})' + '\n'  
                 elif modul.lower() == 'changeiframepro':
                     python_code += f'{current_indent}{conversion_d[modul]}(module=\"{comand_as_json["module_name"]}\", command=\"{modul}\",  params={{ \'data_type\': \"{comand_as_json["data_type"]}\", \'data\': \"{comand_as_json["data"]}\" , \'wait\': {comand_as_json["wait"]}}})' + '\n'                  
                 elif modul.lower() == 'cleaninputs':
@@ -291,12 +313,17 @@ def translate_j_to_py(j_cod, conversion_d, output_file_path, level=1):
                 elif modul.lower() == 'clickpro':  
                     python_code += f'{current_indent}{conversion_d[modul]}(module=\"{comand_as_json["module_name"]}\", command=\"{modul}\",  params={{ \'data\': \"{comand_as_json["data"]}\", \'data_type\': \"{comand_as_json["data_type"]}\", \'wait\': {comand_as_json["wait"]} }})' + '\n'                                      
                 elif modul.lower() == 'setvariable':
+
                     comand_as_json = json.loads(py_cod['command'])  
                     varss = comand_as_json['vars']
                     varss_list = varss.split(",")
+
                     datas = comand_as_json['data']
                     datas = datas.replace("'", '"') 
-                    datas =  json.loads(datas)
+                    datas = resolver_cadena(datas)
+
+                    #datas =  json.loads(datas)
+
                     for i in range(len(varss_list)):
                         if datas[i] == "":
                             if varss_list[i] in list_vars:
@@ -320,6 +347,51 @@ def translate_j_to_py(j_cod, conversion_d, output_file_path, level=1):
         logger.error(f"Error: {py_cod} not found in conversion dictionary")
 
     return python_code
+
+
+
+
+def resolver_cadena(cadena):
+    global list_vars
+
+
+    # Quitar los corchetes externos
+    cadena = cadena.strip("[]")
+
+    # Separar elementos por comas, considerando que pueden tener espacios
+    elementos = [elem.strip() for elem in cadena.split(",")]
+
+    resultado = []
+    
+    for elem in elementos:
+        # Remover comillas iniciales y finales si existen
+        elem = elem.strip("'\"")
+        
+        # Buscar variables dentro de {}
+        def reemplazar_variable(match):
+            var_name = match.group(1)
+            if var_name in list_vars:
+                return f"{{{var_name}}}"  # Mantiene las llaves
+            else:
+                return f"{{bot.getvar(\"{var_name}\")}}"  # Usa bot.getvar()
+
+        elem = re.sub(r"\{(.*?)\}", reemplazar_variable, elem)
+
+        # Si el elemento contiene un '+', intenta unir los segmentos correctamente
+        if "+" in elem:
+            partes = [part.strip().strip("'\"") for part in elem.split("+")]
+            elem = "".join(partes)
+
+        # Agregar la 'f' al inicio si contiene llaves {}
+        if "{" in elem and "}" in elem:
+            elem = f"f'{elem}'"
+
+        resultado.append(elem)
+
+    return resultado
+
+
+
 
 
 

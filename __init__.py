@@ -20,13 +20,17 @@ try:
     if module == "convertJson2Py":
         token = GetVar("carriers_token")
         bot_name = GetParams("inputBotName")
+    
         compiler = GetParams("option")
-        print(f"COMPILER {compiler}")
+
+        
         ruta_bot_dir = os.path.join(current_path, 'modules', 'castj2py', 'samples', bot_name)
-  
-        if "False" in compiler:
+    
+        if compiler is None or  "False" in compiler:
+        
             # Obtener el ID del bot
             bot_id = get_id_bot(bot_name, token)
+        
 
             if(bot_id == None):
                 print("\n")
@@ -53,18 +57,18 @@ try:
                     ruta_bot = os.path.join(current_path, 'modules', 'castj2py', 'samples', bot_name,f'{bot_name_lower}.py')
                     if not os.path.exists(ruta_bot):
                         with open(ruta_bot, 'w') as file:
-                            file.write('import json\n'  + 'from time import sleep\n' + 'import requests\n' + 'def run(bot):\n')
+                            file.write('import json\n'  + 'from time import sleep\n' + 'import os\n' + 'from datetime import datetime \n'+ 'import requests\n' + 'def run(bot):\n')
                     else:
                         with open(ruta_bot, 'w') as file:
-                            file.write('import json\n' + 'import time\n' + 'def run(bot):\n')
+                            file.write('import json\n' + 'from time import sleep\n' + 'import os\n' + 'import requests\n' +'from datetime import datetime \n'+ 'def run(bot):\n')
                     # Initializar la database
 
                     main()
                     
                     run(update, file_json , ruta_bot)
             
-        os.environ["ruta_bot"] = ruta_bot_dir
-        os.system(f"{os.getcwd()}\modules\castj2py\libs\python\python.exe modules/castj2py/src/compiler.py build_ext --inplace --build-lib {ruta_bot_dir}")
+        #os.environ["ruta_bot"] = ruta_bot_dir
+        #os.system(f"{os.getcwd()}\modules\castj2py\libs\python\python.exe modules/castj2py/src/compiler.py build_ext --inplace --build-lib {ruta_bot_dir}")
 
 
 except Exception as e:

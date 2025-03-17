@@ -11,6 +11,7 @@
     "wait" : "sleep",
     "waitforobject" : "bot.scrap.wait_for_object",
     "sendKeyWeb": "bot.scrap.send_key_web",
+    "sendKey": "bot.scrap.send_key_web",
     "clickWeb": "bot.scrap.click_and_wait_if_neccesary",
     "openUrl": "bot.scrap.load_url",
     "countwindow": "bot.scrap.count_window",
@@ -36,5 +37,6 @@
     "chromeMode": "bot.execute_command",
     "cleanVars": "bot.execute_command",
     "openBrowser": "bot.execute_command",
-    "sendkeys": "bot.execute_command"
+    "sendkeys": "bot.execute_command",
+    "deletefile": "os.remove"
 }
